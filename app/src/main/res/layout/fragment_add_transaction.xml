@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width = "match_parent"
+    android:layout_height = "match_parent"
+    android:background = "@drawable/bg_primary"
+    android:layoutDirection = "rtl"
+    android:orientation = "vertical"
+    android:padding = "8dp">
+
+    <LinearLayout
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:orientation = "vertical"
+        app:layout_constraintTop_toTopOf = "parent">
+
+        <EditText
+            android:id = "@+id/edtTxtTitle"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "8dp"
+            android:background = "@drawable/bg_input"
+            android:hint = "@string/title"
+            android:inputType = "text"
+            android:maxLines = "1"
+            android:textColor = "@color/colorWhite"
+            android:textColorHint = "@color/colorWhiteT50" />
+
+        <LinearLayout
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "8dp"
+            android:background = "@drawable/bg_input">
+
+            <EditText
+                android:id = "@+id/edtTxtAmount"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_marginEnd = "8dp"
+                android:layout_weight = "0.9"
+                android:background = "#00FFFFFF"
+                android:hint = "@string/amount"
+                android:inputType = "number"
+                android:maxLines = "1"
+                android:textColor = "@color/colorWhite"
+                android:textColorHint = "@color/colorWhiteT50" />
+
+            <TextView
+                android:id = "@+id/txtCurrency"
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:text = "@string/toman"
+                android:textColor = "@color/colorPrimary"
+                android:textSize = "22sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "8dp"
+            android:background = "@drawable/bg_input"
+            android:gravity = "center">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id = "@+id/switchTransType"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "0.6"
+                android:text = "@string/transaction_type"
+                android:textColor = "@color/colorWhite"
+                android:textSize = "18sp"
+                app:thumbTint = "@color/colorIncome"
+                app:trackTint = "@color/colorWhiteT50" />
+
+            <TextView
+                android:id = "@+id/txtTransType"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight="0.4"
+                android:text = "@string/income"
+                android:textColor = "@color/colorIncome"
+                android:textSize = "22sp"
+                android:gravity="end"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "8dp">
+
+            <TextView
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:layout_gravity = "start|center_vertical"
+                android:layout_marginStart = "12dp"
+                android:text = "@string/date"
+                android:textColor = "@color/colorWhite"
+                android:textSize = "18sp" />
+
+            <LinearLayout
+                android:layout_width = "0sp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "0.5"
+                android:gravity = "center">
+
+                <NumberPicker
+                    android:id = "@+id/numPickerDay"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:background = "@drawable/bg_input"
+                    android:descendantFocusability = "blocksDescendants" />
+
+                <NumberPicker
+                    android:id = "@+id/numPickerMonth"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "8dp"
+                    android:layout_marginEnd = "8dp"
+                    android:background = "@drawable/bg_input"
+                    android:descendantFocusability = "blocksDescendants" />
+
+                <NumberPicker
+                    android:id = "@+id/numPickerYear"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:background = "@drawable/bg_input"
+                    android:descendantFocusability = "blocksDescendants" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <EditText
+            android:id = "@+id/edtTxtDescription"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "8dp"
+            android:background = "@drawable/bg_input"
+            android:gravity = "top|start"
+            android:hint = "@string/description"
+            android:inputType = "text"
+            android:maxLines = "5"
+            android:textColor = "@color/colorWhite"
+            android:textColorHint = "@color/colorWhiteT50" />
+
+    </LinearLayout>
+
+    <Button
+        android:id = "@+id/btnAddTransaction"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:background = "@drawable/bg_btn_add_income"
+        android:text = "@string/add_transaction"
+        android:textColor = "@color/colorPrimary"
+        android:textSize = "22sp"
+        app:layout_constraintBottom_toBottomOf = "parent" />
+
+</android.support.constraint.ConstraintLayout>

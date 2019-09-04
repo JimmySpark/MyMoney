@@ -1,0 +1,17 @@
+<resources>
+    <string name = "app_name">پول من</string>
+    <string name = "payments">خرج ها</string>
+    <string name = "all">همه</string>
+    <string name = "incomes">درآمد ها</string>
+    <string name = "setting">تنظیمات</string>
+    <string name = "description">توضیحات</string>
+    <string name = "title">عنوان</string>
+    <string name = "amount">مبلغ</string>
+    <string name = "date">تاریخ</string>
+    <string name = "add_transaction">افزودن تراکنش</string>
+    <string name = "toman">&#160;تومان</string>
+    <string name = "rial">&#160;ریال</string>
+    <string name = "transaction_type">نوع تراکنش</string>
+    <string name = "income">درآمد</string>
+    <string name = "payment">هزینه</string>
+</resources>

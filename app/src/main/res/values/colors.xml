@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name = "colorPrimary">#1a2940</color>
+    <color name = "colorPrimaryDark">#00102a</color>
+    <color name = "colorAccent">#3050fd</color>
+    <color name = "colorAccentSecondary">#21c7db</color>
+    <color name = "colorWhite">#fff</color>
+    <color name = "colorBlack">#000</color>
+    <color name = "colorIncome">#76FF03</color>
+    <color name = "colorIncomeDark">#5FD101</color>
+    <color name = "colorPayment">#ff1744</color>
+    <color name = "colorPaymentDark">#ff1744</color>
+    <color name = "colorWhiteT80">#CBFFFFFF</color>
+    <color name = "colorWhiteT50">#80FFFFFF</color>
+    <color name = "colorWhiteT35">#59FFFFFF</color>
+    <color name = "colorWhiteT20">#33FFFFFF</color>
+</resources>
