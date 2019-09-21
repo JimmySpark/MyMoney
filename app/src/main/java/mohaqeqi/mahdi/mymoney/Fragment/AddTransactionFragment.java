@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +29,7 @@ import mohaqeqi.mahdi.mymoney.Util.JalaliCalendar;
 
 import static mohaqeqi.mahdi.mymoney.App.AppInitializer.db;
 import static mohaqeqi.mahdi.mymoney.App.AppInitializer.editor;
+import static mohaqeqi.mahdi.mymoney.App.AppInitializer.month;
 import static mohaqeqi.mahdi.mymoney.App.AppInitializer.preferences;
 
 public class AddTransactionFragment extends Fragment {
@@ -45,25 +44,17 @@ public class AddTransactionFragment extends Fragment {
     TextView txtCurrency;
     SwitchCompat switchTransType;
     TextView txtTransType;
+    boolean editable;
+    int transactionId;
+    long oldAmount;
+    long newAmount;
+    String oldType;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_transaction, container, false);
         initView(view);
-
-        txtCurrency.setText(preferences.getString("currency", getContext().getResources().getString(R.string.toman)));
-
-        btnAddTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!edtTxtTitle.getText().toString().equals("") && !edtTxtAmount.getText().toString().equals(""))
-                    saveTransaction();
-                else
-                    Toast.makeText(getContext(), "فیلد عنوان و قیمت نمی تواند خالی باشد", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         return view;
     }
 
@@ -71,24 +62,32 @@ public class AddTransactionFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setNumberPickerDate();
-        setSwitchTransType();
-        edtTxtAmount.addTextChangedListener(new TextWatcher() {
+        editable = getArguments().getBoolean("editable");
+
+        txtCurrency.setText(preferences.getString("currency", getContext().getResources().getString(R.string.toman)));
+
+        btnAddTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-//                edtTxtAmount.setText(String.format("%,3d", Long.valueOf(s.toString())));
+            public void onClick(View v) {
+                if (!edtTxtTitle.getText().toString().equals("")) {
+                    if (!edtTxtAmount.getText().toString().equals("")) {
+                        if (!edtTxtAmount.getText().toString().equals("0")) {
+                            if (editable)
+                                editTransaction();
+                            else
+                                saveTransaction();
+                        } else
+                            Toast.makeText(getContext(), "قیمت نمی تواند صفر باشد", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getContext(), "فیلد قیمت نمی تواند خالی باشد", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getContext(), "فیلد عنوان نمی تواند خالی باشد", Toast.LENGTH_SHORT).show();
             }
         });
+        setNumberPickerDate();
+        setSwitchTransType();
+        if (editable)
+            setEditableData();
     }
 
     private void initView(View view) {
@@ -119,8 +118,7 @@ public class AddTransactionFragment extends Fragment {
                     txtTransType.setText(getContext().getResources().getString(R.string.income));
                     txtTransType.setTextColor(getContext().getResources().getColor(R.color.colorIncomeDark));
                     btnAddTransaction.setBackground(getContext().getDrawable(R.drawable.bg_btn_add_income));
-                }
-                else {
+                } else {
                     txtTransType.setText(getContext().getResources().getString(R.string.payment));
                     txtTransType.setTextColor(getContext().getResources().getColor(R.color.colorPaymentDark));
                     btnAddTransaction.setBackground(getContext().getDrawable(R.drawable.bg_btn_add_payment));
@@ -131,17 +129,13 @@ public class AddTransactionFragment extends Fragment {
 
     private void setNumberPickerDate() {
 
-        String[] month = new String[]{"فروردین", "اردیبهشت", "خرداد",
-                "تیر", "مرداد", "شهریور",
-                "مهر", "آبان", "آذر",
-                "دی", "بهمن", "اسفند"};
         numPickerDay.setMinValue(1);
         numPickerDay.setMaxValue(31);
         numPickerMonth.setMinValue(1);
         numPickerMonth.setMaxValue(12);
         numPickerMonth.setDisplayedValues(month);
         numPickerYear.setMinValue(1390);
-        numPickerYear.setMaxValue(1400);
+        numPickerYear.setMaxValue(1500);
         changeDividerColor(numPickerDay, Color.parseColor("#00ffffff"));
         changeDividerColor(numPickerMonth, Color.parseColor("#00ffffff"));
         changeDividerColor(numPickerYear, Color.parseColor("#00ffffff"));
@@ -150,9 +144,33 @@ public class AddTransactionFragment extends Fragment {
                 Calendar.getInstance().get(Calendar.MONTH) + 1,
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         JalaliCalendar.gDate currentDate = JalaliCalendar.MiladiToJalali(date);
-        numPickerDay.setValue(currentDate.getDay());
+        numPickerDay.setValue(currentDate.getDay() + 1);
         numPickerMonth.setValue(currentDate.getMonth());
         numPickerYear.setValue(currentDate.getYear());
+    }
+
+    private void setEditableData() {
+
+        transactionId = getArguments().getInt("id");
+        oldAmount = getArguments().getLong("amount");
+        oldType = getArguments().getString("type");
+        edtTxtTitle.setText(getArguments().getString("title"));
+        edtTxtAmount.setText(String.valueOf(oldAmount));
+        if (oldType.equals("I")) {
+
+            switchTransType.setChecked(false);
+            txtTransType.setText(getResources().getString(R.string.income));
+            btnAddTransaction.setBackground(getResources().getDrawable(R.drawable.bg_btn_add_income));
+        } else {
+            switchTransType.setChecked(true);
+            txtTransType.setText(getResources().getString(R.string.payment));
+            btnAddTransaction.setBackground(getResources().getDrawable(R.drawable.bg_btn_add_payment));
+        }
+        numPickerDay.setValue(getArguments().getInt("day"));
+        numPickerMonth.setValue(getArguments().getInt("month"));
+        numPickerYear.setValue(getArguments().getInt("year"));
+        edtTxtDescription.setText(getArguments().getString("description"));
+        btnAddTransaction.setText(getResources().getString(R.string.edit_transaction));
     }
 
     private void changeDividerColor(NumberPicker picker, int color) {
@@ -178,44 +196,80 @@ public class AddTransactionFragment extends Fragment {
 
     private void saveTransaction() {
 
-        if (switchTransType.isChecked()) {
-            editor.putLong("balance", preferences.getLong("balance", 0) + Long.valueOf(edtTxtAmount.getText().toString())).apply();
-            MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance", 0)));
+        String sDate = numPickerYear.getValue() + "" + numPickerMonth.getValue();
+        if (!switchTransType.isChecked()) {
+            editor.putLong("balance" + sDate, preferences.getLong("balance" + sDate, 0) + Long.valueOf(edtTxtAmount.getText().toString())).apply();
+            MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance" + sDate, 0)));
             Toast.makeText(getContext(), "تراکنش با موفقیت ذخیره شد", Toast.LENGTH_SHORT).show();
-            saveToDb();
-            getContext().startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        } else {
-            if (preferences.getLong("balance", 0) - Long.valueOf(edtTxtAmount.getText().toString()) < 0)
-                Toast.makeText(getContext(), "مبلغ کسری شما بیشتر از مقدار موجودی است!", Toast.LENGTH_SHORT).show();
-            else {
-                editor.putLong("balance", preferences.getLong("balance", 0) - Long.valueOf(edtTxtAmount.getText().toString())).apply();
-                MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance", 0)));
-                Toast.makeText(getContext(), "تراکنش با موفقیت ذخیره شد", Toast.LENGTH_SHORT).show();
-                saveToDb();
-                getContext().startActivity(new Intent(getActivity(), MainActivity.class));
-                getActivity().finish();
-            }
-        }
-    }
-
-    private long saveToDb() {
-
-        if (switchTransType.isChecked())
-            return db.addTransaction(edtTxtTitle.getText().toString(),
-                    Long.valueOf(edtTxtAmount.getText().toString()),
-                    numPickerDay.getValue(),
-                    numPickerMonth.getValue(),
-                    numPickerYear.getValue(),
-                    edtTxtDescription.getText().toString(),
-                    "P");
-        else
-            return db.addTransaction(edtTxtTitle.getText().toString(),
+            db.addTransaction(edtTxtTitle.getText().toString(),
                     Long.valueOf(edtTxtAmount.getText().toString()),
                     numPickerDay.getValue(),
                     numPickerMonth.getValue(),
                     numPickerYear.getValue(),
                     edtTxtDescription.getText().toString(),
                     "I");
+            getContext().startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        } else {
+            if (preferences.getLong("balance" + sDate, 0) - Long.valueOf(edtTxtAmount.getText().toString()) < 0)
+                Toast.makeText(getContext(), "مبلغ کسری شما بیشتر از مقدار موجودی است!", Toast.LENGTH_SHORT).show();
+            else {
+                editor.putLong("balance" + sDate, preferences.getLong("balance" + sDate, 0) - Long.valueOf(edtTxtAmount.getText().toString())).apply();
+                MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance" + sDate, 0)));
+                Toast.makeText(getContext(), "تراکنش با موفقیت ذخیره شد", Toast.LENGTH_SHORT).show();
+                db.addTransaction(edtTxtTitle.getText().toString(),
+                        Long.valueOf(edtTxtAmount.getText().toString()),
+                        numPickerDay.getValue(),
+                        numPickerMonth.getValue(),
+                        numPickerYear.getValue(),
+                        edtTxtDescription.getText().toString(),
+                        "P");
+                getContext().startActivity(new Intent(getActivity(), MainActivity.class));
+                getActivity().finish();
+            }
+        }
+    }
+
+    private void editTransaction() {
+
+        String sDate = numPickerYear.getValue() + "" + numPickerMonth.getValue();
+        if (oldType.equals("I"))
+            newAmount = preferences.getLong("balance" + sDate, 0) - oldAmount;
+        else
+            newAmount = preferences.getLong("balance" + sDate, 0) + oldAmount;
+
+        if (!switchTransType.isChecked()) {
+            editor.putLong("balance" + sDate, newAmount + Long.valueOf(edtTxtAmount.getText().toString())).apply();
+            MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance" + sDate, 0)));
+            Toast.makeText(getContext(), "تراکنش با موفقیت ویرایش شد", Toast.LENGTH_SHORT).show();
+            db.editTransaction(transactionId,
+                    edtTxtTitle.getText().toString(),
+                    Long.valueOf(edtTxtAmount.getText().toString()),
+                    numPickerDay.getValue(),
+                    numPickerMonth.getValue(),
+                    numPickerYear.getValue(),
+                    edtTxtDescription.getText().toString(),
+                    "I");
+            getContext().startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        } else {
+            if (newAmount - Long.valueOf(edtTxtAmount.getText().toString()) < 0)
+                Toast.makeText(getContext(), "مبلغ کسری شما بیشتر از مقدار موجودی است!", Toast.LENGTH_SHORT).show();
+            else {
+                editor.putLong("balance" + sDate, newAmount - Long.valueOf(edtTxtAmount.getText().toString())).apply();
+                MainActivity.txtBalance.setText(String.format("%,3d", preferences.getLong("balance" + sDate, 0)));
+                Toast.makeText(getContext(), "تراکنش با موفقیت ویرایش شد", Toast.LENGTH_SHORT).show();
+                db.editTransaction(transactionId,
+                        edtTxtTitle.getText().toString(),
+                        Long.valueOf(edtTxtAmount.getText().toString()),
+                        numPickerDay.getValue(),
+                        numPickerMonth.getValue(),
+                        numPickerYear.getValue(),
+                        edtTxtDescription.getText().toString(),
+                        "P");
+                getContext().startActivity(new Intent(getActivity(), MainActivity.class));
+                getActivity().finish();
+            }
+        }
     }
 }

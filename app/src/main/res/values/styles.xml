@@ -1,11 +1,30 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name = "AppTheme" parent = "Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name = "colorPrimary">@color/colorPrimary</item>
         <item name = "colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name = "colorAccent">@color/colorAccent</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/PopupMenuTextAppearanceLarge</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/PopupMenuTextAppearanceSmall</item>
+    </style>
+
+    <style name = "AlertDialogStyle" parent = "Theme.AppCompat.Dialog">
+        <item name = "android:colorAccent">@color/colorAccentSecondary</item>
+        <item name = "android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup_menu</item>
+        <item name = "android:popupElevation">@dimen/cardview_default_elevation</item>
+    </style>
+
+    <style name="PopupMenuTextAppearanceSmall" parent="@android:style/TextAppearance.DeviceDefault.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="PopupMenuTextAppearanceLarge" parent="@android:style/TextAppearance.DeviceDefault.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
 </resources>

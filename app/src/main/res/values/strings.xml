@@ -14,4 +14,19 @@
     <string name = "transaction_type">نوع تراکنش</string>
     <string name = "income">درآمد</string>
     <string name = "payment">هزینه</string>
+    <string name = "erase_all">پاک کردن همه</string>
+    <string name = "undo">بازگرداندن</string>
+    <string name = "erase_done">حذف انجام شد</string>
+    <string name = "edit">ویرایش</string>
+    <string name = "edit_transaction">ویرایش تراکنش</string>
+    <string name = "erase_month">پاک کردن اطلاعات ماه و سال</string>
+    <string name = "no_transaction">تراکنشی موجود نیست</string>
+    <string name = "newest">جدید ترین</string>
+    <string name = "oldest">قدیمی ترین</string>
+    <string name = "highest_amount">بیشترین مبلغ</string>
+    <string name = "lowest_amount">کمترین مبلغ</string>
+    <string name = "transaction_amount">مبلغ تراکنش</string>
+    <string name = "transaction_date">تاریخ تراکنش</string>
+    <string name = "transaction_creation_date">تاریخ ایجاد تراکنش</string>
+    <string name = "currency">واحد پول</string>
 </resources>

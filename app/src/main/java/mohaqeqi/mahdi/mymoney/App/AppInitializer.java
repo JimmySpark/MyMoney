@@ -12,6 +12,7 @@ public class AppInitializer extends Application {
     public static AppDatabase db;
     public static SharedPreferences preferences;
     public static SharedPreferences.Editor editor;
+    public static String[] month;
 
     @Override
     public void onCreate() {
@@ -22,6 +23,11 @@ public class AppInitializer extends Application {
                 .setDefaultFontPath("font/yekan.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
+
+        month = new String[]{"فروردین", "اردیبهشت", "خرداد",
+                "تیر", "مرداد", "شهریور",
+                "مهر", "آبان", "آذر",
+                "دی", "بهمن", "اسفند"};
 
         db = new AppDatabase(getApplicationContext());
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
